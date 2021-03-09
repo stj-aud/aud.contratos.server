@@ -1,0 +1,27 @@
+<h1>Contratos Vigentes e em Planejamento</h1>
+
+
+<table class="striped">
+	<thead>
+		<tr>
+			{{#each cabecalho}}
+			<th>{{this}}</th>
+			{{/each}}
+		</tr>
+	</thead>
+	<tbody>
+		{{#each dados}}
+		<tr>
+			{{#each this}}
+			<td>{{this}}</td>
+			{{/each}}
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<pre>
+{{json cabecalho}}
+{{json dados}}
+	
+</pre>

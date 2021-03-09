@@ -1,11 +1,11 @@
 import * as express from 'express';
 // Use different Routers to organize yout path groups
-import mainRouter from './routers/main.router';
 
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
+const hbs = require('hbs');
 
 // The line below is added to format JSON output
 app.set('json spaces', 2);
@@ -14,7 +14,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
+import mainRouter from './routers/main.router';
 app.use('/',mainRouter);
+import contratosRouter from './routers/contratos.router';
+app.use('/contratos',contratosRouter);
 //import fooRouter from './routers/foo.router';
 //app.use('/foo',fooRouter);
 
@@ -28,6 +31,13 @@ app.use(function(req,res,next) {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+hbs.registerHelper('json',
+	(object) =>
+	{
+		return JSON.stringify(object, null, 2);
+	}
+)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
