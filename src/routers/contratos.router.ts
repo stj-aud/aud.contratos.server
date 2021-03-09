@@ -8,16 +8,16 @@ const viewFolder:string = 'contratos';
 
 router.get('/', (req: Request, res: Response) =>
 {
-	console.log(ContratoModel.fields);
-	DB.lista().then(saida =>
+	let campos:string[] = ContratoModel.fields;
+	
+	ContratoModel.getAll({fields: campos}).then(result=>
 	{
 		let data:any = {};
-		data.dados = saida;
-		data.cabecalho = Object.keys(saida[0]);
+		data.dados = result;
+		data.cabecalho = campos;
 		
 		res.render(`${viewFolder}/index`,data);
-	})
-	//res.render(`${viewFolder}/index`);
+	});
 });
 
 export default router;

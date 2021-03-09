@@ -109,17 +109,20 @@ class DBClass
 	public queryObj(
 		table: string,
 		args?: {
-			fields?: string[]
-			where?: string;
+			fields?: string[],
+			where?: string,
+			limit?: number
 		}
-	)
+	):Promise<any>
 	{
 		return new Promise((resolve, reject) =>
 		{
 			this.isConnected().then(()=>
 			{
-				let sql: string = `SELECT TOP(10000) `;
-				sql += (args && args.fields) ? args.fields.join(', ') : '* '
+				let sql: string = `SELECT `;
+				sql += (args && args.limit) ? `TOP(${args.limit}) ` : `TOP(10000) `;
+				sql += (args && args.fields) ? args.fields.join(', ') : '*'
+				sql += ' ';
 				sql += `FROM ${table} `;
 				sql += `WHERE ` + ((args && args.where) ? args.where : "1=1");
 				

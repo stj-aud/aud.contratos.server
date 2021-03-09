@@ -41,6 +41,8 @@ export class Contrato
 
 class ContratoModelClass extends Model
 {
+	protected tableName:string = 'contrato_cnt';
+	
 	public fields:string[] = Object.keys(new Contrato());
 }
 
