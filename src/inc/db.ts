@@ -16,23 +16,14 @@ const conn = new SQL.ConnectionPool(
 	}
 );
 
-export class DB
+class DBClass
 {
-	private static instance:DB;
+	//private static instance:DB;
 	private connection = null;
 	
-	private constructor()
+	constructor()
 	{
 		this.connect();
-	}
-	
-	public static getInstance()
-	{
-		if (!this.instance)
-		{
-			this.instance = new DB();
-		}
-		return this.instance;
 	}
 	
 	private connect()
@@ -43,11 +34,13 @@ export class DB
 			conn.connect()
 			.then(conn =>
 			{
+				console.log('Conexão bem sucedida!');
 				this.connection = conn;
 				resolve(true);
 			})
 			.catch(err =>
 			{
+				console.log('Erro na conexão!');
 				console.log(err);
 				reject(err);
 			});
@@ -107,10 +100,41 @@ export class DB
 				`;
 				this.connection.request().query(sql).then(res =>
 				{
-					console.log(Object.keys(res));
 					resolve(res.recordset);
 				});
 			});
 		});
 	}
+	
+	public queryObj(
+		table: string,
+		args?: {
+			fields?: string[]
+			where?: string;
+		}
+	)
+	{
+		return new Promise((resolve, reject) =>
+		{
+			this.isConnected().then(()=>
+			{
+				let sql: string = `SELECT TOP(10000) `;
+				sql += (args && args.fields) ? args.fields.join(', ') : '* '
+				sql += `FROM ${table} `;
+				sql += `WHERE ` + ((args && args.where) ? args.where : "1=1");
+				
+				this.connection.request().query(sql).then(res =>
+				{
+					resolve(res.recordset);
+				})
+				.catch(err => 
+				{
+					console.log(err);
+					reject(err);
+				});
+			});
+		});
+	}
 }
+
+export const DB:DBClass = new DBClass();
