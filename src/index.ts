@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 const hbs = require('hbs');
+const moment = require('moment');
 
 // The line below is added to format JSON output
 app.set('json spaces', 2);
@@ -37,7 +38,21 @@ hbs.registerHelper('json',
 	{
 		return JSON.stringify(object, null, 2);
 	}
-)
+);
+hbs.registerHelper('formata',
+	(object) =>
+	{
+		if (object instanceof Date)
+		{
+			return moment(object).format('DD/MM/YYYY');
+		}
+		else
+		{
+			return object;
+		}
+		//
+	}
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

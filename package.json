@@ -6,8 +6,8 @@
   "scripts": {
     "start": "yarn clean && nodemon",
     "build": "yarn sass:build && webpack",
-    "sass": "sass --watch src/sass/style.scss public/css/style.css",
-    "sass:build": "sass src/sass/style.scss public/css/style.css",
+    "sass": "sass --watch src/sass/style.scss:public/css/style.css",
+    "sass:build": "sass src/sass/style.scss:public/css/style.css",
     "clean": "rimraf dist/"
   },
   "author": "Vitor Dutra <dfreire@stj.jus.br>",
@@ -33,6 +33,7 @@
     "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
     "hbs": "^4.1.1",
+    "moment": "^2.29.1",
     "msnodesqlv8": "1",
     "mssql": "^6.3.1"
   }

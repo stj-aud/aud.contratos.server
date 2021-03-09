@@ -68,50 +68,13 @@ class DBClass
 		})
 	}
 	
-	public lista():Promise<any>
-	{
-		return new Promise((resolve, reject) =>
-		{
-			this.isConnected().then(()=>
-			{
-				let sql: string = `
-				SELECT TOP(10) 
-					c.seq_contrato,
-					c.numero_contrato, 
-					c.desc_objeto_contrato,
-					c.ind_prorrogavel_contrato,
-					c.dt_max_prorrogavel_contrato,
-					c.vlr_contrato,
-					c.vlr_inicial_contrato,
-					c.dt_vigencia_inicial_contrato,
-					c.dt_vigencia_final_contrato,
-					c.ind_continuidade,
-					c.dt_atualizacao,
-					c.dt_assinatura,
-					c.seq_mod_licitacao,
-					c.seq_id_unidade,
-					c.seq_tipo_instrumento,
-					c.seq_tipo_processo,
-					c.seq_tipo_contratacao,
-					c.ind_contrato_continuado,
-					c.ind_previsao_reajuste
-				FROM contrato_cnt c
-				WHERE 1=1
-				`;
-				this.connection.request().query(sql).then(res =>
-				{
-					resolve(res.recordset);
-				});
-			});
-		});
-	}
-	
 	public queryObj(
 		table: string,
 		args?: {
 			fields?: string[],
 			where?: string,
-			limit?: number
+			limit?: number,
+			order?: string;
 		}
 	):Promise<any>
 	{
@@ -125,6 +88,7 @@ class DBClass
 				sql += ' ';
 				sql += `FROM ${table} `;
 				sql += `WHERE ` + ((args && args.where) ? args.where : "1=1");
+				sql += (args && args.order) ? ` ORDER BY ${args.order}` : '';
 				
 				this.connection.request().query(sql).then(res =>
 				{
