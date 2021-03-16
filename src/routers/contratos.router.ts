@@ -1,6 +1,5 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { DB } from '../inc/db';
 import { ContratoModel } from '../model/contrato.model';
 
 const router = express.Router();
@@ -12,6 +11,7 @@ router.get('/', (req: Request, res: Response) =>
 	
 	campos = campos.filter(campo =>
 	{
+		/*
 		if (campo == 'cod_matricula') return false;
 		if (campo == 'desc_prazo_pagamento') return false;
 		if (campo == 'vlr_contrato_entrada') return false;
@@ -22,14 +22,15 @@ router.get('/', (req: Request, res: Response) =>
 		if (campo == 'ind_enviado_gestor') return false;
 		if (campo == 'ind_reiterado_gestor') return false;
 		if (campo == 'dt_enviado_gestor') return false;
+		// */
 		return true;
 	})
 	
 	let args = {
 		fields: campos,
 		limit: 1000,
-		where: `dt_vigencia_final_contrato >= getdate()`,
-		order: `dt_vigencia_inicial_contrato DESC`
+		//where: `dt_vigencia_final_contrato >= getdate()`,
+		//order: `dt_vigencia_inicial_contrato DESC`
 	}
 	
 	ContratoModel.getAll(args).then(result=>
@@ -38,7 +39,8 @@ router.get('/', (req: Request, res: Response) =>
 		data.dados = result;
 		data.cabecalho = campos;
 		
-		res.render(`${viewFolder}/index`,data);
+		//res.render(`${viewFolder}/index`,data);
+		res.json(data);
 	});
 });
 

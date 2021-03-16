@@ -7,6 +7,7 @@ export class Model
 	
 	public getAll(args?:any):Promise<any[]>
 	{
+		console.log(this.tableName);
 		return this.db.queryObj(this.tableName,args);
 	}
 }

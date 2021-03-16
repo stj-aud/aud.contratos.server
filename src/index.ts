@@ -5,7 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
-const hbs = require('hbs');
+//const hbs = require('hbs');
 const moment = require('moment');
 
 // The line below is added to format JSON output
@@ -17,22 +17,22 @@ app.use(cors());
 
 import mainRouter from './routers/main.router';
 app.use('/',mainRouter);
-import contratosRouter from './routers/contratos.router';
-app.use('/contratos',contratosRouter);
+//import contratosRouter from './routers/contratos.router';
+//app.use('/contratos',contratosRouter);
 //import fooRouter from './routers/foo.router';
 //app.use('/foo',fooRouter);
 
 // Use this if Global view variables are needed
 app.use(function(req,res,next) {
 	//res.locals.foo = "bar";
-	res.locals.title = "YOUR TITLE HERE";
+	//res.locals.title = "YOUR TITLE HERE";
 	next();
 });
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'hbs');
+/*
 hbs.registerHelper('json',
 	(object) =>
 	{
@@ -53,13 +53,13 @@ hbs.registerHelper('formata',
 		//
 	}
 );
-
+// */
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Setup public folder for static content
-app.use(express.static(path.join(__dirname, '..', 'public')));
+//app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Fallback error if route not found
 app.use((req, res, next) => {

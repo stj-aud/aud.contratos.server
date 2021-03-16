@@ -84,12 +84,12 @@ class DBClass
 			{
 				let sql: string = `SELECT `;
 				sql += (args && args.limit) ? `TOP(${args.limit}) ` : `TOP(10000) `;
-				sql += (args && args.fields) ? args.fields.join(', ') : '*'
+				sql += (args && args.fields) ? '['+args.fields.join('], [')+']' : '*'
 				sql += ' ';
 				sql += `FROM ${table} `;
 				sql += `WHERE ` + ((args && args.where) ? args.where : "1=1");
 				sql += (args && args.order) ? ` ORDER BY ${args.order}` : '';
-				
+				console.log(sql);
 				this.connection.request().query(sql).then(res =>
 				{
 					resolve(res.recordset);
@@ -99,6 +99,11 @@ class DBClass
 					console.log(err);
 					reject(err);
 				});
+			})
+			.catch(err=>
+			{
+				console.log(err);
+				reject(err);
 			});
 		});
 	}

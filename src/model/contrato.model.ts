@@ -2,46 +2,32 @@ import { Model } from "../inc/model";
 
 export class Contrato
 {
-	seq_contrato: number = null;
-	numero_contrato?: string = null;
-	num_contrato_externo?: string = null;
-	desc_objeto_contrato?:string = null;
-	num_edital_licitacao?:string = null;
-	ind_prorrogavel_contrato?:number = null;
-	dt_max_prorrogavel_contrato?:Date = null;
-	vlr_contrato?:number = null;
-	vlr_inicial_contrato?:number = null;
-	perc_max_acres_permitido?: number = null;
-	dt_max_apres_garantia?:Date = null;
-	dt_vigencia_inicial_contrato?:Date = null;
-	dt_vigencia_final_contrato?:Date = null;
-	ind_continuidade?:number = null;
-	dt_atualizacao?:Date = null;
-	dt_assinatura?:Date = null;
-	seq_mod_licitacao?:number = null;
-	seq_id_unidade?:number = null;
-	seq_tipo_instrumento?:number = null;
-	seq_tipo_processo?:number = null;
-	seq_tipo_contratacao?:number = null;
-	cod_matricula?:string = null;
-	desc_prazo_pagamento?:string = null;
-	vlr_contrato_fixo?:number = null;
-	vlr_contrato_estimado?:number = null;
-	vlr_contrato_entrada?:number = null;
-	ind_periodicidade_vlr_fixo?:number = null;
-	ind_periodicidade_vlr_estimado?:number = null;
-	dt_manifestacao_gestor?:Date = null;
-	ind_enviado_gestor?:number = null;
-	ind_reiterado_gestor?:number = null;
-	dt_enviado_gestor?:Date = null;
-	ind_st_siasg?:number = null;
-	ind_contrato_continuado?:number = null;
-	ind_previsao_reajuste?:number = null;
+	seq_trpb_documento: number = null;
+	desc_titulo_documento: string = null;
+	ano_doc_trpb: number = null;
+	num_doc_trpb: number = null;
+	seq_id_unidade: number = null;
+	seq_processo: number = null;
+	ind_trpb_tp_documento: number = null;
+	ind_trpb_st_documento: number = null;
+	ind_trpb_doc_modelo: number = null;
+	ind_trpb_tp_modelo: number = null;
+	ind_trpb_st_edicao_doc: number = null;
+	ind_trpb_area_modelo: number = null;
+	ind_st_registro: number = null;
+	dt_registro: Date = null;
+	cod_usuario: string = null;
+	dt_alteracao: Date = null;
+	cod_usuario_alteracao: string = null;
+	seq_pedido_material: number = null;
+	ind_trpb_migrou_modelo: number = null;
+	/*
+	// */
 }
 
 class ContratoModelClass extends Model
 {
-	protected tableName:string = 'contrato_cnt';
+	protected tableName:string = 'trpb_documento';
 	
 	public fields:string[] = Object.keys(new Contrato());
 }
