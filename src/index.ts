@@ -17,8 +17,8 @@ app.use(cors());
 
 import mainRouter from './routers/main.router';
 app.use('/',mainRouter);
-//import contratosRouter from './routers/contratos.router';
-//app.use('/contratos',contratosRouter);
+import contratosRouter from './routers/contratos.router';
+app.use('/contratos',contratosRouter);
 //import fooRouter from './routers/foo.router';
 //app.use('/foo',fooRouter);
 

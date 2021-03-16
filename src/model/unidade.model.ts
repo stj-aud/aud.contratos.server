@@ -37,6 +37,7 @@ class UnidadeModelClass extends Model
 	protected tableName: string = 'unid_orgnl';
 	
 	public fields:string[] = Object.keys(new Unidade());
+	
 }
 
 export const UnidadeModel: UnidadeModelClass = new UnidadeModelClass();

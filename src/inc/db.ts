@@ -5,14 +5,15 @@ const conn = new SQL.ConnectionPool(
 		server: 'palmas',
 		database: 'servidor_sci',
 		driver: 'msnodesqlv8',
+		requestTimeout:35000,
 		options: {
-			trustedConnection: true
+			trustedConnection: true,
 		},
 		pool: {
 			max: 10,
 			min: 0,
-			idleTimeoutMillis: 30000
-		}
+			idleTimeoutMillis: 30000,
+		},
 	}
 );
 
@@ -68,6 +69,26 @@ class DBClass
 		})
 	}
 	
+	public query(sql:string):Promise<any>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			this.isConnected().then(()=>
+			{
+				this.connection.request().query(sql)
+				.then(res =>
+				{
+					resolve(res.recordset);
+				})
+				.catch(err =>
+				{
+					//console.log('Erro ao executar a query '+sql);
+					reject(err);
+				});
+			});
+		})
+	}
+	
 	public queryObj(
 		table: string,
 		args?: {
@@ -89,7 +110,7 @@ class DBClass
 				sql += `FROM ${table} `;
 				sql += `WHERE ` + ((args && args.where) ? args.where : "1=1");
 				sql += (args && args.order) ? ` ORDER BY ${args.order}` : '';
-				console.log(sql);
+				//console.log(sql);
 				this.connection.request().query(sql).then(res =>
 				{
 					resolve(res.recordset);

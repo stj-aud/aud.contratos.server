@@ -9,23 +9,6 @@ router.get('/', (req: Request, res: Response) =>
 {
 	let campos:string[] = ContratoModel.fields;
 	
-	campos = campos.filter(campo =>
-	{
-		/*
-		if (campo == 'cod_matricula') return false;
-		if (campo == 'desc_prazo_pagamento') return false;
-		if (campo == 'vlr_contrato_entrada') return false;
-		if (campo == 'vlr_contrato_entrada') return false;
-		if (campo == 'ind_periodicidade_vlr_fixo') return false;
-		if (campo == 'ind_periodicidade_vlr_estimado') return false;
-		if (campo == 'dt_manifestacao_gestor') return false;
-		if (campo == 'ind_enviado_gestor') return false;
-		if (campo == 'ind_reiterado_gestor') return false;
-		if (campo == 'dt_enviado_gestor') return false;
-		// */
-		return true;
-	})
-	
 	let args = {
 		fields: campos,
 		limit: 1000,
@@ -41,7 +24,34 @@ router.get('/', (req: Request, res: Response) =>
 		
 		//res.render(`${viewFolder}/index`,data);
 		res.json(data);
+	})
+	.catch(err =>
+	{
+		console.log(err.originalError);
+		res.status(500).json({...err,message:err.originalError.toString()});
 	});
 });
+
+router.get('/detalhes/:ano/:numero',(req: Request, res: Response) =>
+{
+	let ano:number = Number(req.params.ano);
+	let numero: number = Number(req.params.numero);
+	
+	if (!ano || !numero || isNaN(ano) || isNaN(numero))
+	{
+		return res.status(400).json({code: 400, message: "Parâmetros incorretos"});
+	}
+	
+	ContratoModel.getDetalhesContrato(ano,numero)
+	.then(contrato =>
+	{
+		res.json(contrato);
+	})
+	.catch(err =>
+	{
+		console.log(err.originalError);
+		res.status(500).json({...err,message:err.originalError.toString()});
+	});
+})
 
 export default router;
