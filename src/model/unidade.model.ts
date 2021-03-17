@@ -61,13 +61,18 @@ class UnidadeModelClass extends Model
 				//order: `dt_vigencia_inicial_contrato DESC`
 			}
 			
-			UnidadeModel.getAll(args).then(result=>
+			UnidadeModel.getAll(args)
+			.then(result=>
 			{
 				let data:any = {};
 				data.dados = result;
 				data.cabecalho = campos;
 				
 				resolve(data);
+			})
+			.catch(err =>
+			{
+				reject(err);
 			});
 		});
 	}
@@ -77,6 +82,7 @@ class UnidadeModelClass extends Model
 		return new Promise((resolve, reject) =>
 		{
 			let cacheName:string = 'unidades';
+			console.log('Recuperando cache');
 			Cache.recover(cacheName)
 			.then(data =>
 			{
@@ -84,6 +90,7 @@ class UnidadeModelClass extends Model
 			})
 			.catch(err =>
 			{
+				console.log('Encontrando no DB');
 				this.getUnidadesBD()
 				.then(data =>
 				{

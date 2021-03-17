@@ -7,11 +7,14 @@ const viewFolder:string = 'main';
 
 router.get('/', (req: Request, res: Response) =>
 {
-	res.render(`${viewFolder}/index`);
+	console.log('GET:/');
+	//res.render(`${viewFolder}/index`);
+	res.json({msg:'API Contratos STJ by AUD'});
 });
 
 router.get('/unidades', (req: Request, res: Response) =>
 {
+	console.log('GET:/unidades');
 	UnidadeModel.getUnidades()
 	.then((unidades:Unidade[]) =>
 	{

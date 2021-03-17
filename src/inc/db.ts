@@ -42,8 +42,9 @@ class DBClass
 			.catch(err =>
 			{
 				console.log('Erro na conexão!');
-				console.log(err);
-				reject(err);
+				console.log(err.originalError.toString());
+				this.connection = null;
+				//reject(err);
 			});
 		});
 	}
@@ -55,13 +56,19 @@ class DBClass
 			if (this.connection !== null) resolve(true);
 			let conta:number = 0;
 			
-			let timeout = setTimeout(
+			let timeout = setInterval(
 				()=>
 				{
-					if (this.connection !== null) resolve(true);
-					if (conta > 1000)
+					if (this.connection !== null) 
 					{
-						reject('Não foi possível conectar com o banco: timeout da aplicação');
+						resolve(true);
+						clearInterval(timeout);
+					}
+					console.log('Tentativa '+conta);
+					if (conta > 10)
+					{
+						reject(new CustomError('Não foi possível conectar com o banco: timeout da aplicação'));
+						clearInterval(timeout);
 					}
 					conta++;
 				},100
@@ -85,6 +92,10 @@ class DBClass
 					//console.log('Erro ao executar a query '+sql);
 					reject(err);
 				});
+			})
+			.catch(err =>
+			{
+				reject(err);
 			});
 		})
 	}
@@ -101,7 +112,8 @@ class DBClass
 	{
 		return new Promise((resolve, reject) =>
 		{
-			this.isConnected().then(()=>
+			this.isConnected()
+			.then(()=>
 			{
 				let sql: string = `SELECT `;
 				sql += (args && args.limit) ? `TOP(${args.limit}) ` : `TOP(10000) `;
@@ -131,3 +143,15 @@ class DBClass
 }
 
 export const DB:DBClass = new DBClass();
+
+class CustomError
+{
+	public originalError: string;
+	public error:Error;
+	
+	constructor(msg:string)
+	{
+		this.originalError = msg;
+		this.error = new Error(msg);
+	}
+}
