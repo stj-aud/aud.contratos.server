@@ -31,6 +31,51 @@ class ContratoModelClass extends Model
 	
 	public fields:string[] = Object.keys(new Contrato());
 	
+	public getInfoContrato(ano: number, numero: number):Promise<any>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			let sql:string;
+			sql = `SELECT
+								c.seq_trpb_documento,
+								c.desc_titulo_documento,
+								c.ano_doc_trpb,
+								c.num_doc_trpb,
+								u.nome_unidade,
+								u.sg_unidade,
+								u.seq_id_unid_sup,
+								u.ind_niv_hierc,
+								c.seq_processo,
+								c.ind_trpb_tp_documento,
+								c.ind_trpb_st_documento,
+								c.ind_trpb_doc_modelo,
+								c.ind_trpb_tp_modelo,
+								c.ind_trpb_st_edicao_doc,
+								c.ind_trpb_area_modelo,
+								c.ind_st_registro,
+								c.dt_registro,
+								c.cod_usuario,
+								c.dt_alteracao,
+								c.cod_usuario_alteracao,
+								c.seq_pedido_material,
+								c.ind_trpb_migrou_modelo
+						FROM [trpb_documento] c
+						INNER JOIN [unid_orgnl] u ON u.seq_id_unidade = c.seq_id_unidade
+						WHERE c.num_doc_trpb = ${numero} AND c.ano_doc_trpb = ${ano}`;
+			this.db.query(sql)
+			.then((res:any[]) =>
+			{
+				if (res.length == 0) return resolve(null);
+				resolve(res[0]);
+			})
+			.catch(err =>
+			{
+				reject(err);
+			});
+			
+		});
+	}
+	
 	public getDetalhesContrato(ano:number,numero:number):Promise<any>
 	{
 		return new Promise((resolve, reject) =>
