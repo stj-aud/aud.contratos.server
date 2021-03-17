@@ -7,23 +7,10 @@ const viewFolder:string = 'contratos';
 
 router.get('/', (req: Request, res: Response) =>
 {
-	let campos:string[] = ContratoModel.fields;
-	
-	let args = {
-		fields: campos,
-		limit: 1000,
-		//where: `dt_vigencia_final_contrato >= getdate()`,
-		//order: `dt_vigencia_inicial_contrato DESC`
-	}
-	
-	ContratoModel.getAll(args).then(result=>
+	ContratoModel.getContratos()
+	.then(contratos =>
 	{
-		let data:any = {};
-		data.dados = result;
-		data.cabecalho = campos;
-		
-		//res.render(`${viewFolder}/index`,data);
-		res.json(data);
+		res.json(contratos);
 	})
 	.catch(err =>
 	{
@@ -41,28 +28,16 @@ router.get('/detalhes/:ano/:numero',(req: Request, res: Response) =>
 	{
 		return res.status(400).json({code: 400, message: "Parâmetros incorretos"});
 	}
-	
-	ContratoModel.getInfoContrato(ano,numero)
-	.then(contratoInfo =>
+	ContratoModel.getContrato(ano,numero)
+	.then(contrato =>
 	{
-		ContratoModel.getDetalhesContrato(ano,numero)
-		.then(contrato =>
-		{
-			res.json({...contratoInfo,...contrato});
-		})
-		.catch(err =>
-		{
-			console.log(err.originalError);
-			res.status(500).json({...err,message:err.originalError.toString()});
-		});
+		res.json(contrato);
 	})
 	.catch(err =>
 	{
 		console.log(err.originalError);
 		res.status(500).json({...err,message:err.originalError.toString()});
-	})
-	
-	
+	});
 })
 
 export default router;

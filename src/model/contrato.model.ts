@@ -1,3 +1,4 @@
+import { Cache } from "../inc/cache";
 import { Model } from "../inc/model";
 
 export class Contrato
@@ -31,7 +32,61 @@ class ContratoModelClass extends Model
 	
 	public fields:string[] = Object.keys(new Contrato());
 	
-	public getInfoContrato(ano: number, numero: number):Promise<any>
+	private getContratosBd():Promise<Contrato[]>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			let campos:string[] = ContratoModel.fields;
+			
+			let args = {
+				fields: campos,
+				limit: 1000,
+				//where: `dt_vigencia_final_contrato >= getdate()`,
+				//order: `dt_vigencia_inicial_contrato DESC`
+			}
+			
+			ContratoModel.getAll(args).then(result=>
+			{
+				let data:any = {};
+				data.dados = result;
+				data.cabecalho = campos;
+				
+				resolve(data);
+			})
+			.catch(err =>
+			{
+				reject(err);
+			});
+		});
+	}
+	
+	public getContratos():Promise<Contrato[]>
+	{
+		return new Promise((resolve,reject)=>
+		{
+			let cacheName:string = 'contratos';
+			Cache.recover(cacheName)
+			.then(data =>
+			{
+				resolve(data);
+			})
+			.catch(err =>
+			{
+				this.getContratosBd()
+				.then(data =>
+				{
+					Cache.save(cacheName,data);
+					resolve(data);
+				})
+				.catch(err =>
+				{
+					reject(err);
+				})
+			});
+		});
+	}
+	
+	private getInfoContrato(ano: number, numero: number):Promise<any>
 	{
 		return new Promise((resolve, reject) =>
 		{
@@ -76,7 +131,7 @@ class ContratoModelClass extends Model
 		});
 	}
 	
-	public getDetalhesContrato(ano:number,numero:number):Promise<any>
+	private getDetalhesContrato(ano:number,numero:number):Promise<any>
 	{
 		return new Promise((resolve, reject) =>
 		{
@@ -151,6 +206,57 @@ class ContratoModelClass extends Model
 			{
 				//console.log(err);
 				reject(err);
+			});
+		});
+	}
+	
+	private getContratoBd(ano:number, numero: number):Promise<any>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			ContratoModel.getInfoContrato(ano,numero)
+			.then(contratoInfo =>
+			{
+				ContratoModel.getDetalhesContrato(ano,numero)
+				.then(contrato =>
+				{
+					resolve({...contratoInfo,...contrato})
+				})
+				.catch(err =>
+				{
+					reject(err);
+				});
+			})
+		})
+	}
+	
+	public getContrato(ano:number, numero: number):Promise<any>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			if (!ano || !numero || isNaN(ano) || isNaN(numero))
+			{
+				return reject("Parâmetros incorretos!");
+			}
+			
+			let cacheName:string = `contrato-${ano}-${numero}`;
+			Cache.recover(cacheName)
+			.then(data =>
+			{
+				resolve(data);
+			})
+			.catch(err =>
+			{
+				this.getContratoBd(ano,numero)
+				.then(data =>
+				{
+					Cache.save(cacheName,data);
+					resolve(data);
+				})
+				.catch(err =>
+				{
+					reject(err);
+				})
 			});
 		});
 	}

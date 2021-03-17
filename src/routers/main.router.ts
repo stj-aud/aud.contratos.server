@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { UnidadeModel } from '../model/unidade.model';
+import { Unidade, UnidadeModel } from '../model/unidade.model';
 
 const router = express.Router();
 const viewFolder:string = 'main';
@@ -12,31 +12,15 @@ router.get('/', (req: Request, res: Response) =>
 
 router.get('/unidades', (req: Request, res: Response) =>
 {
-	let campos:string[] = UnidadeModel.fields;
-	
-	campos = campos.filter(campo =>
+	UnidadeModel.getUnidades()
+	.then((unidades:Unidade[]) =>
 	{
-		/*
-		if (campo == 'cod_matricula') return false;
-		// */
-		return true;
+		res.json(unidades);
 	})
-	
-	let args = {
-		fields: campos,
-		limit: 1000,
-		where: `dt_fim_unid IS NULL`,
-		//AND ind_tipo_atividade_unid = 'M' 
-		//order: `dt_vigencia_inicial_contrato DESC`
-	}
-	
-	UnidadeModel.getAll(args).then(result=>
+	.catch(err =>
 	{
-		let data:any = {};
-		data.dados = result;
-		data.cabecalho = campos;
-		
-		res.json(data);
+		console.log(err.originalError);
+		res.status(500).json({...err,message:err.originalError.toString()});
 	});
 });
 
