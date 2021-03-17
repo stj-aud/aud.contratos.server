@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { Unidade, UnidadeModel } from '../model/unidade.model';
+import { Unidade } from '../model/unidade';
+import { UnidadeModel } from '../model/unidade.model';
 
 const router = express.Router();
 const viewFolder:string = 'main';
@@ -16,7 +17,7 @@ router.get('/unidades', (req: Request, res: Response) =>
 {
 	console.log('GET:/unidades');
 	UnidadeModel.getUnidades()
-	.then((unidades:Unidade[]) =>
+	.then((unidades) =>
 	{
 		res.json(unidades);
 	})

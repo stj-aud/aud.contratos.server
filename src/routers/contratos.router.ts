@@ -1,6 +1,7 @@
+import { Contrato } from './../model/contrato';
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { Contrato, ContratoModel } from '../model/contrato.model';
+import { ContratoModel } from '../model/contrato.model';
 
 const router = express.Router();
 const viewFolder:string = 'contratos';
@@ -8,7 +9,7 @@ const viewFolder:string = 'contratos';
 router.get('/', (req: Request, res: Response) =>
 {
 	ContratoModel.getContratos()
-	.then(contratos =>
+	.then((contratos) =>
 	{
 		res.json(contratos);
 	})
