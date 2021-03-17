@@ -168,7 +168,10 @@ class ContratoModelClass extends Model
 				linhas.forEach(linha =>
 				{
 					saidaTxt += linha['desc_conteudo_textual_puro']+"\n";
-					saidaHtml += linha['desc_conteudo_textual']+"\n";
+					
+					let html:string = linha['desc_conteudo_textual'];
+					if (html[0] != '<') html = `<h1>${html}</h1>`;
+					saidaHtml += html+"\n";
 				});
 				resolve(
 					{
